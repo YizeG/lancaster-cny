@@ -1,0 +1,699 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Lancaster Econ · 中国春节聚会</title>
+
+  <style>
+    :root{
+      --bg:#fbfaf7; --ink:#1f2328; --muted:#5a6169; --line:rgba(31,35,40,.14);
+      --accent:#b51d1d; --accent2:#7f1515; --gold:#c9a24a;
+      --card:rgba(255,255,255,.70); --shadow:0 14px 40px rgba(31,35,40,.10); --r:18px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0}
+    body{
+      font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans CJK SC",Arial,sans-serif;
+      color:var(--ink);
+      background:
+        radial-gradient(900px 600px at 70% 15%, rgba(181,29,29,.10), transparent 55%),
+        radial-gradient(700px 520px at 15% 85%, rgba(201,162,74,.08), transparent 60%),
+        var(--bg);
+      overflow-x:hidden;
+    }
+
+    /* topbar */
+    .topbar{position:sticky;top:0;z-index:30;backdrop-filter:blur(10px);background:rgba(251,250,247,.72);border-bottom:1px solid var(--line)}
+    .topbar-inner{max-width:980px;margin:0 auto;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .brand{display:flex;flex-direction:column;gap:2px;min-width:0}
+    .brand .t{font-weight:900;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .brand .s{font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+    .festive{display:flex;align-items:center;gap:10px;flex-shrink:0}
+    .lantern{width:22px;height:26px;position:relative;animation:sway 2.6s ease-in-out infinite;transform-origin:50% 0%;filter:drop-shadow(0 6px 10px rgba(31,35,40,.12))}
+    .lantern::before{content:"";position:absolute;inset:0;border-radius:10px 10px 12px 12px;background:linear-gradient(180deg,rgba(255,255,255,.25),transparent 35%),linear-gradient(90deg,rgba(255,255,255,.18),transparent 40%),var(--accent);border:1px solid rgba(0,0,0,.08)}
+    .lantern::after{content:"";position:absolute;left:50%;top:-10px;width:2px;height:12px;background:rgba(127,21,21,.55);transform:translateX(-50%)}
+    .lantern .cap{position:absolute;left:50%;top:-4px;width:14px;height:6px;transform:translateX(-50%);border-radius:6px;background:var(--gold);opacity:.9}
+    .lantern .tassel{position:absolute;left:50%;bottom:-10px;width:2px;height:12px;transform:translateX(-50%);background:rgba(201,162,74,.95);border-radius:2px}
+    @keyframes sway{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+
+    .fuSmall{width:34px;height:34px;display:grid;place-items:center;background:linear-gradient(145deg,rgba(181,29,29,.95),rgba(127,21,21,.98));
+      border:1px solid rgba(0,0,0,.10);border-radius:10px;color:#fff;font-weight:900;letter-spacing:1px;box-shadow:0 10px 18px rgba(31,35,40,.12);transform:rotate(8deg);user-select:none}
+    .fuSmall span{transform:rotate(-8deg);display:block}
+
+    /* main layout */
+    .wrap{max-width:980px;margin:0 auto;padding:18px 14px 26px}
+    .shell{border:1px solid var(--line);border-radius:calc(var(--r) + 10px);overflow:hidden;background:rgba(251,250,247,.70);box-shadow:var(--shadow);position:relative}
+    .grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px;padding:16px}
+    @media (max-width:860px){.grid{grid-template-columns:1fr}}
+    .panel{border:1px solid var(--line);border-radius:var(--r);background:var(--card);padding:16px;position:relative;overflow:hidden}
+    .hero{padding:18px;background:linear-gradient(135deg,rgba(181,29,29,.10),transparent 55%),rgba(255,255,255,.60);min-height:360px}
+    @media (max-width:860px){.hero{min-height:330px}}
+
+    .h1{font-size:clamp(24px,3.8vw,40px);font-weight:900;letter-spacing:.8px;margin:2px 0 10px;line-height:1.15}
+    .lead{margin:0;color:var(--muted);font-size:15px;line-height:1.9;max-width:56ch}
+    .toLine{margin-top:10px;color:rgba(31,35,40,.78);font-weight:800}
+    .toLine small{font-weight:700;color:var(--muted)}
+
+    button{appearance:none;border:1px solid var(--line);background:rgba(255,255,255,.72);padding:10px 12px;border-radius:12px;cursor:pointer;font-size:14px;color:var(--ink);
+      transition:transform .08s ease,border-color .12s ease,background .12s ease;user-select:none}
+    button:hover{transform:translateY(-1px);border-color:rgba(181,29,29,.35)}
+
+    .page{display:none;animation:fade .18s ease-out}
+    .page.active{display:block}
+    @keyframes fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+    .content h2{margin:0 0 10px;font-size:18px;letter-spacing:.2px}
+    .content p{margin:0 0 10px;color:var(--muted);font-size:14.5px;line-height:1.95}
+    .content .strong{color:var(--ink);font-weight:900}
+    .divider{height:1px;background:var(--line);margin:12px 0}
+
+    /* side */
+    .sideTop{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+    .sideTop .label{font-weight:900}
+    .pill{display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.66);color:var(--muted);font-size:12.5px}
+    .pill .dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px rgba(181,29,29,.12)}
+    .metaCard{border:1px solid rgba(181,29,29,.18);background:rgba(181,29,29,.06);border-radius:16px;padding:12px;margin-bottom:12px}
+    .metaRow{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-top:1px dashed rgba(31,35,40,.12)}
+    .metaRow:first-child{border-top:none}
+    .metaK{width:60px;color:var(--muted);font-size:12.5px}
+    .metaV{flex:1;font-size:13.5px;color:var(--ink);font-weight:800;line-height:1.6}
+
+    .menu{display:grid;gap:10px}
+    .item{text-align:left;padding:13px;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.66)}
+    .item .k{font-weight:900;margin-bottom:3px}
+    .item .d{color:var(--muted);font-size:13px;line-height:1.6}
+
+    /* confetti */
+    .confetti{position:fixed;inset:0;pointer-events:none;z-index:5;overflow:hidden;opacity:.82}
+    .confetti i{position:absolute;top:-12px;width:8px;height:8px;border-radius:2px;background:rgba(181,29,29,.20);border:1px solid rgba(181,29,29,.18);animation:fall linear infinite}
+    .confetti i.gold{background:rgba(201,162,74,.18);border-color:rgba(201,162,74,.18)}
+    @keyframes fall{to{transform:translateY(calc(100vh + 40px)) rotate(260deg)}}
+
+    /* door scene */
+    .doorScene{
+      position:fixed; inset:0; z-index:80;
+      display:flex; align-items:center; justify-content:center;
+      background:
+        radial-gradient(900px 600px at 70% 20%, rgba(181,29,29,.14), transparent 55%),
+        radial-gradient(700px 520px at 15% 85%, rgba(201,162,74,.10), transparent 60%),
+        rgba(251,250,247,.92);
+      backdrop-filter: blur(10px);
+    }
+    .doorScene.hidden{ display:none; }
+    .doorStage{
+      width:min(980px, calc(100vw - 28px));
+      height:min(560px, calc(100vh - 140px));
+      border-radius: 26px;
+      border:1px solid rgba(31,35,40,.12);
+      box-shadow: 0 22px 70px rgba(31,35,40,.20);
+      overflow:hidden;
+      position:relative;
+      background: rgba(255,255,255,.30);
+    }
+    .doorHint{
+      position:absolute; left:16px; right:16px; top:14px;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      color: rgba(31,35,40,.72); font-size: 13px;
+      pointer-events:none;
+    }
+    .hintPill{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 8px 10px;
+      border:1px solid rgba(31,35,40,.14);
+      border-radius: 999px;
+      background: rgba(255,255,255,.60);
+    }
+    .kbd{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace; font-size: 12px; opacity:.85}
+
+    .doorOverlay{
+      position:absolute; inset:0;
+      display:flex;
+      pointer-events:auto;
+      cursor:pointer;
+    }
+    .door{
+      flex:1;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.10), transparent 25%),
+        radial-gradient(520px 380px at 50% 30%, rgba(201,162,74,.14), transparent 60%),
+        linear-gradient(90deg, rgba(0,0,0,.06), transparent 36%),
+        rgba(181,29,29,.28);
+      border-right: 1px solid rgba(31,35,40,.10);
+      position:relative;
+    }
+    .door.right{ border-right:none; border-left: 1px solid rgba(31,35,40,.10); }
+    .door::after{
+      content:"";
+      position:absolute; top:50%;
+      width: 10px; height: 16px;
+      border-radius: 10px;
+      background: rgba(201,162,74,.92);
+      box-shadow: 0 10px 18px rgba(31,35,40,.18);
+      transform: translateY(-50%);
+      opacity:.98;
+    }
+    .door.left::after{ right: 20px; }
+    .door.right::after{ left: 20px; }
+
+    .bigFu{
+      position:absolute; left:50%; top:46%;
+      transform: translate(-50%,-50%) rotate(6deg);
+      width: 132px; height: 132px;
+      border-radius: 24px;
+      background: linear-gradient(145deg, rgba(181,29,29,.96), rgba(127,21,21,.99));
+      border: 1px solid rgba(0,0,0,.12);
+      box-shadow: 0 18px 34px rgba(31,35,40,.20);
+      display:grid; place-items:center;
+      color:#fff; font-weight: 950; font-size: 60px; letter-spacing: 8px;
+      user-select:none; pointer-events:none;
+    }
+    .bigFu span{ transform: rotate(-6deg) translateX(3px); display:block; }
+
+    .doorTitle{
+      position:absolute; left:50%; top:18%;
+      transform: translateX(-50%);
+      text-align:center;
+      color: rgba(31,35,40,.84);
+      pointer-events:none;
+      padding: 10px 14px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.45);
+      border: 1px solid rgba(31,35,40,.10);
+      backdrop-filter: blur(6px);
+    }
+    .doorTitle .main{font-weight:950; letter-spacing:1px; font-size: 18px}
+    .doorTitle .sub{margin-top:4px; font-size: 13px; color: var(--muted); font-weight:700}
+
+    .doorLantern{
+      position:absolute; top:92px;
+      width:22px; height:26px;
+      animation:sway 2.9s ease-in-out infinite;
+      transform-origin:50% 0%;
+      filter: drop-shadow(0 10px 16px rgba(31,35,40,.16));
+      pointer-events:none;
+    }
+    .doorLantern::before{
+      content:""; position:absolute; inset:0;
+      border-radius:10px 10px 12px 12px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.22), transparent 38%),
+        linear-gradient(90deg, rgba(255,255,255,.16), transparent 42%),
+        var(--accent);
+      border:1px solid rgba(0,0,0,.08);
+    }
+    .doorLantern::after{
+      content:""; position:absolute; left:50%; top:-18px;
+      width:2px; height:20px; background: rgba(127,21,21,.55);
+      transform: translateX(-50%);
+    }
+    .doorLantern .cap{position:absolute;left:50%;top:-4px;width:14px;height:6px;transform:translateX(-50%);border-radius:6px;background:var(--gold);opacity:.9}
+    .doorLantern .tassel{position:absolute;left:50%;bottom:-12px;width:2px;height:14px;transform:translateX(-50%);background:rgba(201,162,74,.95);border-radius:2px}
+    .doorLantern.left{ left: 24px; }
+    .doorLantern.right{ right: 24px; animation-duration: 3.2s; opacity:.95; }
+
+    .opening .door.left{ animation: openLeft .62s cubic-bezier(.2,.9,.2,1) forwards; }
+    .opening .door.right{ animation: openRight .62s cubic-bezier(.2,.9,.2,1) forwards; }
+    @keyframes openLeft{ to{ transform: translateX(-102%); } }
+    @keyframes openRight{ to{ transform: translateX(102%); } }
+
+    .fadeOut{ animation: fadeOut .35s ease forwards; }
+    @keyframes fadeOut{ to{ opacity:0; transform: scale(1.01);} }
+
+    /* burst particles */
+    .burst{position:fixed; inset:0; pointer-events:none; z-index:60;}
+    .burst i{position:absolute; width:8px; height:8px; border-radius:2px; background:rgba(181,29,29,.22); border:1px solid rgba(181,29,29,.16); animation: pop .7s ease-out forwards;}
+    .burst i.gold{background:rgba(201,162,74,.20); border-color: rgba(201,162,74,.16);}
+    @keyframes pop{0%{transform:translate(0,0) scale(1); opacity:1}100%{transform:translate(var(--dx), var(--dy)) scale(.6); opacity:0}}
+
+    /* red envelope draw */
+    .envelopeWrap{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:8px}
+    .envelope{
+      width:120px;height:150px;border-radius:16px;
+      background:linear-gradient(160deg, rgba(181,29,29,.95), rgba(127,21,21,.98));
+      border:1px solid rgba(0,0,0,.10);
+      box-shadow:0 14px 22px rgba(31,35,40,.14);
+      position:relative; cursor:pointer; user-select:none;
+      display:flex; align-items:flex-end; justify-content:center;
+      padding-bottom:14px;
+      transition: transform .10s ease;
+    }
+    .envelope:hover{transform:translateY(-2px)}
+    .envelope::before{
+      content:""; position:absolute; left:16px; right:16px; top:18px; height:64px;
+      background:linear-gradient(180deg, rgba(255,255,255,.14), transparent 55%);
+      border-radius:12px;
+      clip-path: polygon(0 0, 100% 0, 50% 70%);
+      opacity:.9;
+    }
+    .coin{
+      position:absolute; top:54px; left:50%; transform:translateX(-50%);
+      width:34px; height:34px; border-radius:999px;
+      background:rgba(201,162,74,.92);
+      box-shadow:0 8px 14px rgba(31,35,40,.16);
+      display:grid; place-items:center; font-weight:900; color:rgba(31,35,40,.78);
+    }
+    .envText{color:rgba(255,255,255,.92); font-weight:900; letter-spacing:.8px}
+    .resultBox{
+      flex:1; min-width: 220px;
+      border:1px dashed rgba(31,35,40,.18);
+      border-radius:14px;
+      padding:12px;
+      background: rgba(255,255,255,.55);
+      color: var(--muted);
+      line-height:1.9;
+      font-size:14.5px;
+    }
+
+    /* ===== 菜单：分组卡片（替代超长tag） ===== */
+    .dishGrid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 8px;
+    }
+    @media (min-width: 860px){
+      .dishGrid{ grid-template-columns: 1fr 1fr; }
+    }
+    .dishCard{
+      border:1px solid rgba(31,35,40,.12);
+      border-radius: 16px;
+      background: rgba(255,255,255,.66);
+      padding: 12px 12px;
+      box-shadow: 0 10px 22px rgba(31,35,40,.06);
+      position:relative;
+      overflow:hidden;
+    }
+    .dishHead{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom: 8px;
+    }
+    .dishTitle{
+      font-weight: 950;
+      letter-spacing:.3px;
+      color: var(--ink);
+      font-size: 15px;
+      line-height:1.35;
+    }
+    .dishSub{
+      margin-top:4px;
+      color: rgba(31,35,40,.62);
+      font-size: 12.5px;
+      line-height:1.7;
+    }
+    .dishBadge{
+      flex:0 0 auto;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border:1px solid rgba(181,29,29,.16);
+      background: rgba(181,29,29,.06);
+      color: rgba(181,29,29,.82);
+      font-weight: 900;
+      font-size: 12px;
+      user-select:none;
+    }
+    .dishList{
+      margin: 0;
+      padding-left: 18px;
+      color: rgba(31,35,40,.78);
+      line-height: 1.9;
+      font-size: 13.5px;
+    }
+    .dishList li{ margin: 2px 0; }
+
+    /* === 贺卡风祝福卡片（升级排版 + 烫金边） === */
+    .blessCard{
+      position: relative;
+      border-radius: 22px;
+      padding: 26px 26px;
+      border: 1px solid rgba(181,29,29,.18);
+      background:
+        radial-gradient(520px 280px at 12% 8%, rgba(201,162,74,.16), transparent 62%),
+        radial-gradient(520px 280px at 88% 0%, rgba(181,29,29,.14), transparent 64%),
+        rgba(255,255,255,.66);
+      box-shadow: 0 18px 40px rgba(31,35,40,.12);
+      overflow: hidden;
+    }
+    .blessCard::before{
+      content:"";
+      position:absolute; inset:10px;
+      border-radius: 18px;
+      border: 1px solid rgba(201,162,74,.32);
+      pointer-events:none;
+    }
+    .blessCard::after{
+      content:"";
+      position:absolute; inset:0;
+      background:
+        radial-gradient(2px 2px at 14% 22%, rgba(201,162,74,.25), transparent 60%),
+        radial-gradient(2px 2px at 80% 18%, rgba(201,162,74,.22), transparent 60%),
+        radial-gradient(2px 2px at 28% 78%, rgba(201,162,74,.18), transparent 60%),
+        radial-gradient(2px 2px at 86% 82%, rgba(201,162,74,.18), transparent 60%);
+      opacity:.75;
+      pointer-events:none;
+    }
+    .blessBig{
+      margin: 0;
+      text-align: center;
+      font-size: 19px;
+      line-height: 2.15;
+      font-weight: 900;
+      color: rgba(31,35,40,.88);
+      letter-spacing: .35px;
+      position: relative;
+      z-index: 2;
+    }
+    .corner{
+      position:absolute;
+      font-size: 18px;
+      opacity: .22;
+      user-select:none;
+      pointer-events:none;
+      filter: drop-shadow(0 10px 18px rgba(31,35,40,.10));
+      z-index: 2;
+    }
+    .corner.tl{ left: 16px; top: 14px; transform: rotate(-12deg); }
+    .corner.tr{ right: 16px; top: 14px; transform: rotate(10deg); }
+    .corner.bl{ left: 16px; bottom: 14px; transform: rotate(8deg); }
+    .corner.br{ right: 16px; bottom: 14px; transform: rotate(-8deg); }
+  </style>
+</head>
+
+<body>
+  <div class="confetti" aria-hidden="true" id="confetti"></div>
+
+  <!-- 开场门场景 -->
+  <div class="doorScene" id="doorScene" aria-label="点击打开贺卡">
+    <div class="doorStage">
+      <div class="doorHint">
+        <div class="hintPill">🧧 点击任意位置开门</div>
+        <div class="hintPill"><span class="kbd">Space / Enter</span></div>
+      </div>
+
+      <div class="doorOverlay" id="doorOverlay">
+        <div class="door left"></div>
+        <div class="door right"></div>
+
+        <div class="doorTitle">
+          <div class="main">Lancaster Econ · 春节小聚</div>
+          <div class="sub" id="doorSub">今晚见 · 开门进来</div>
+        </div>
+
+        <div class="doorLantern left"><div class="cap"></div><div class="tassel"></div></div>
+        <div class="doorLantern right"><div class="cap"></div><div class="tassel"></div></div>
+
+        <div class="bigFu"><span>福</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="t">Lancaster Econ · 中国春节聚会</div>
+        <div class="s" id="subline">新春小聚 · 团圆有味</div>
+      </div>
+      <div class="festive" aria-hidden="true">
+        <div class="lantern"><div class="cap"></div><div class="tassel"></div></div>
+        <div class="lantern"><div class="cap"></div><div class="tassel"></div></div>
+        <div class="fuSmall"><span>福</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="shell">
+      <div class="grid">
+        <section class="panel hero">
+
+          <div id="page-info" class="page active content">
+            <div class="h1">新春见面，安心吃饭不聊研究 🎇</div>
+            <p class="lead">
+              这是一个很 private 的小聚会：不需要太正式，开心最重要。<br/>
+              新春快乐！在英国年味可能会淡一点点，但希望这张贺卡和今晚的晚餐，<br/>
+              能带给大家一点年的味道和家的感觉。
+            </p>
+            <div class="toLine" id="toLine" style="display:none;"></div>
+            <div class="divider"></div>
+            <p class="strong">右侧可以查看：今晚菜单 / 抽红包祝福 / 新年祝福。</p>
+          </div>
+
+          <div id="page-dinner" class="page content">
+            <h2>🍽️ 今晚菜单</h2>
+            <p class="strong">菜品</p>
+            <div class="dishGrid" id="dishGrid"></div>
+          </div>
+
+          <div id="page-draw" class="page content">
+            <h2>🧧 点击抽取属于你的专属好运吧</h2>
+            <p>点击红包，抽一句今日好运签。</p>
+            <div class="divider"></div>
+
+            <div class="envelopeWrap">
+              <div class="envelope" id="envelopeBtn" title="点我抽签">
+                <div class="coin">¥</div>
+                <div class="envText">点击抽签</div>
+              </div>
+              <div class="resultBox">
+                <div class="strong" style="margin-bottom:6px;">你抽到的是：</div>
+                <div id="drawResult">（点击左侧红包开始抽）</div>
+                <div style="margin-top:10px;">
+                  <button id="drawAgainBtn">再抽一次</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="page-wishes" class="page content">
+            <div class="blessCard" style="max-width:760px;margin:10px auto 0;">
+              <div class="corner tl">🎆</div>
+              <div class="corner tr">💰</div>
+              <div class="corner bl">🧨</div>
+              <div class="corner br">🧧</div>
+
+              <p class="blessBig">
+                “谁言河广，一苇杭之。”
+                <br/>愿大家新的一年里：<br/>
+                身体健康、事事如意、所愿皆可得、所念终相见。
+                <br/>也愿大家在忙碌中，<br/>
+                仍能给自己留一点“好好生活”的空间。</p>
+            </div>
+          </div>
+        </section>
+
+        <aside class="panel">
+          <div class="sideTop">
+            <div class="label">今晚信息</div>
+            <div class="pill"><span class="dot"></span><span>Spring Festival</span></div>
+          </div>
+
+          <div class="metaCard">
+            <div class="metaRow">
+              <div class="metaK">时间</div>
+              <div class="metaV">🕖 ✅ 2月17日（周一）18:00</div>
+            </div>
+            <div class="metaRow">
+              <div class="metaK">地点</div>
+              <div class="metaV">📍 ✅ 27 Chapel Street (LA2 0JS)</div>
+            </div>
+            <div class="metaRow">
+              <div class="metaK">对象</div>
+              <div class="metaV">🎉 新的一年变得更加幸运的人</div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="menu">
+            <button class="item" data-go="dinner">
+              <div class="k">🍽️ 今晚菜单</div>
+              <div class="d">来看看今晚吃什么</div>
+            </button>
+            <button class="item" data-go="draw">
+              <div class="k">🧧 抽红包祝福</div>
+              <div class="d">点红包抽好运签</div>
+            </button>
+            <button class="item" data-go="wishes">
+              <div class="k">🧧 新年祝福</div>
+              <div class="d">一张小贺卡</div>
+            </button>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </div>
+
+  <div class="burst" id="burst" aria-hidden="true"></div>
+
+  <script>
+    // ====== 名字可变：URL 参数 ?name=Dave ======
+    function getNameFromURL(){
+      const params = new URLSearchParams(location.search);
+      return (params.get("name") || "").trim();
+    }
+    const name = getNameFromURL();
+    const toLine = document.getElementById("toLine");
+    const doorSub = document.getElementById("doorSub");
+    const subline = document.getElementById("subline");
+
+    if(name){
+      toLine.style.display = "block";
+      toLine.innerHTML = "致：<span class='strong'>" + name + "</span> <small>（愿你新年顺顺利利）</small>";
+      doorSub.textContent = "致 " + name + " · 开门进来";
+      subline.textContent = "致 " + name + " · 有点年味";
+    }
+
+    // ===== 页面切换 =====
+    const pages = { info:"page-info", dinner:"page-dinner", draw:"page-draw", wishes:"page-wishes" };
+    function show(key){
+      const id = pages[key] || pages.info;
+      document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+    }
+    document.addEventListener("click",(e)=>{
+      const btn = e.target.closest("[data-go]");
+      if(!btn) return;
+      show(btn.getAttribute("data-go"));
+    });
+
+    // ===== 纸屑（轻量） =====
+    const confetti = document.getElementById("confetti");
+    const N = 18;
+    for(let i=0;i<N;i++){
+      const el = document.createElement("i");
+      el.style.left = (Math.random()*100) + "vw";
+      const dur = 6 + Math.random()*6;
+      el.style.animationDuration = dur + "s";
+      el.style.animationDelay = (-Math.random()*dur) + "s";
+      const size = 6 + Math.random()*6;
+      el.style.width = size + "px";
+      el.style.height = size + "px";
+      el.style.opacity = (0.32 + Math.random()*0.42).toFixed(2);
+      if(Math.random()<0.35) el.classList.add("gold");
+      confetti.appendChild(el);
+    }
+
+    // ===== 开门（无按钮） =====
+    const doorScene = document.getElementById("doorScene");
+    const doorOverlay = document.getElementById("doorOverlay");
+    let opened = false;
+
+    function openDoor(){
+      if(opened) return;
+      opened = true;
+      doorOverlay.classList.add("opening");
+      setTimeout(()=>doorScene.classList.add("fadeOut"), 560);
+      setTimeout(()=>doorScene.classList.add("hidden"), 900);
+      show("info");
+    }
+    doorOverlay.addEventListener("click", openDoor, {passive:true});
+    doorOverlay.addEventListener("touchstart", openDoor, {passive:true});
+    window.addEventListener("keydown",(e)=>{
+      if(e.key === " " || e.key === "Enter") openDoor();
+    });
+
+    // ===== 菜单（分组卡片）：你只要改这里 =====
+    const menuGroups = [
+      {
+        badge: "汤羹",
+        title: "开席纳福",
+        sub: "芙蓉映福汤才暖，龙腾瑞气满堂春",
+        items: ["龙虾芙蓉汤"]
+      },
+      {
+        badge: "海鲜",
+        title: "年年有余",
+        sub: "鱼跃献瑞连年余，见启财门福自来",
+        items: ["清蒸鲈鱼虾", "蒜蓉粉丝蒸扇贝"]
+      },
+      {
+        badge: "荤菜",
+        title: "富足兴旺",
+        sub: "红火满盘迎盛岁，肉香满席庆丰年",
+        items: ["锅包肉", "糖醋小排", "红烧牛腩", "啫啫鸡", "青椒酿肉"]
+      },
+      {
+        badge: "时蔬",
+        title: "新元安康",
+        sub: "青蔬满席年年吉，节节高升岁岁安",
+        items: ["蒜蓉生菜", "芙蓉茄子", "炝拌土豆丝", "山药炒木耳"]
+      },
+      {
+        badge: "饺子",
+        title: "合家美满",
+        sub: "三味金饺包鸿福，阖家团圆万事全",
+        items: ["牛肉饺子", "虾仁饺子", "红枣核桃饺子"]
+      }
+    ];
+
+    // 渲染菜单分组卡片
+    const dishGrid = document.getElementById("dishGrid");
+    dishGrid.innerHTML = "";
+    menuGroups.forEach(g => {
+      const card = document.createElement("div");
+      card.className = "dishCard";
+      card.innerHTML = `
+        <div class="dishHead">
+          <div>
+            <div class="dishTitle">${g.title}</div>
+            <div class="dishSub">${g.sub}</div>
+          </div>
+          <div class="dishBadge">🍽️ ${g.badge}</div>
+        </div>
+        <ul class="dishList">
+          ${g.items.map(x => `<li>${x}</li>`).join("")}
+        </ul>
+      `;
+      dishGrid.appendChild(card);
+    });
+
+    // ===== 抽签 =====
+    const drawList = [
+      "🧧 吉：写作顺，审稿快，返修少。",
+      "🏮 吉：灵感来得早，数据不作妖。",
+      "🎉 吉：讨论顺畅，合作愉快。",
+      "🍊 吉：新年有橘（有句），好运常驻。",
+      "✨ 吉：所有“明天再做”都能按时完成。",
+      "📚 吉：读文献越读越清楚，写出来越写越顺。",
+      "🥟 吉：吃饺子不烫嘴，做研究不卡壳。",
+      "🧠 吉：想法落地，方法清晰，结果漂亮。"
+    ];
+    const drawResult = document.getElementById("drawResult");
+    const envelopeBtn = document.getElementById("envelopeBtn");
+    const drawAgainBtn = document.getElementById("drawAgainBtn");
+    const burst = document.getElementById("burst");
+
+    function burstPop(){
+      burst.innerHTML = "";
+      const cx = window.innerWidth * (0.33 + Math.random()*0.34);
+      const cy = window.innerHeight * (0.40 + Math.random()*0.18);
+      const M = 26;
+      for(let i=0;i<M;i++){
+        const p = document.createElement("i");
+        const ang = Math.random()*Math.PI*2;
+        const r = 40 + Math.random()*120;
+        p.style.left = cx + "px";
+        p.style.top  = cy + "px";
+        p.style.setProperty("--dx", (Math.cos(ang)*r) + "px");
+        p.style.setProperty("--dy", (Math.sin(ang)*r) + "px");
+        if(Math.random()<0.35) p.classList.add("gold");
+        burst.appendChild(p);
+      }
+      setTimeout(()=>burst.innerHTML="", 750);
+    }
+    function doDraw(){
+      const i = Math.floor(Math.random()*drawList.length);
+      drawResult.textContent = drawList[i];
+      burstPop();
+    }
+    envelopeBtn.addEventListener("click", doDraw);
+    drawAgainBtn.addEventListener("click", doDraw);
+  </script>
+</body>
+</html>
